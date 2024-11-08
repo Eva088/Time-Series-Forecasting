@@ -51,8 +51,20 @@ ax.plot('Time', 'Hardcover', data = df, color = '0.75') #creates a lineplot
 ax = sns.regplot(x = 'Time', y = 'Hardcover', data = df, ci = None, scatter_kws = dict(color = '0.25')) #creates a scatterplot with a regression line 
 ax.set_title('Time Plot of Hardcover Sales')
 
+## %%
+#plt.show()
 
+df ['lag_1']= df ['Hardcover'].shift(1)
+df = df.reindex(columns = ['Hardcover', 'lag_1'])
+print(df)
 
+#Lag Plot of Hardcover Sales
 
+fig,ax = plt.subplots()
+ax = sns.regplot(x = 'lag_1', y = 'Hardcover',data = df, ci = None, scatter_kws = dict(color = '0'), line_kws = dict(color = 'r'))
+ax.set_aspect(1)
+ax.set_title('Lag Plot of Hardcover Sales')
 
+##%%
+#plt.show()
 
