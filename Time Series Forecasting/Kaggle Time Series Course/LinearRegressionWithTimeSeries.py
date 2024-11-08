@@ -1,5 +1,3 @@
-#Source: https://www.kaggle.com/code/ryanholbrook/linear-regression-with-time-series/tutorial
-
 import pandas as pd
 
 #Recording the number of hardcover book sales at a retail store over 30 days 
