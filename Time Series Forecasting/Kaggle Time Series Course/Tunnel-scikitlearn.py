@@ -65,22 +65,46 @@ model = LinearRegression().fit(X,y)
 #Storing the fitted values as a time series with the same time index as the training data
 
 y_pred = pd.Series(model.predict(X), index = X.index)
-print(y_pred)
-print(model.coef_ )
-print(model.intercept_)
+# print(y_pred)
+# print(model.coef_ )
+# print(model.intercept_)
 
 
 #The model created is : Vehicles = 22.5 * Time + 98176. 
 
 #Creating a time series plot
 
-data = y.plot(**plot_params)
+# data = y.plot(**plot_params)
 
 
-ax = y_pred.plot(ax = data, linewidth = 2)
-ax.set_title ('Time Plot of Tunnel Traffic')
-# #%%
+# ax = y_pred.plot(ax = data, linewidth = 2)
+# ax.set_title ('Time Plot of Tunnel Traffic')
+# # #%%
 # plt.show()
 
+#Lag Feature
 
+df['lag_1'] = df['NumVehicles'].shift(1)
+
+from sklearn.linear_model import LinearRegression
+
+X =df.loc[:,['lag_1']]
+X.dropna(inplace = True)
+y = df.loc[:, 'NumVehicles']
+
+y, X = y.align(X ,join='inner') #dropping the  corresponding values in the target
+
+model = LinearRegression().fit(X,y)
+
+y_pred= pd.Series(model.predict(X), index = X.index)
+print(y_pred)
+fig, ax = plt.subplots()
+ax.plot(X['lag_1'], y, '.', color='0.25')
+ax.plot(X['lag_1'], y_pred)
+ax.set_aspect('equal')
+ax.set_ylabel('NumVehicles')
+ax.set_xlabel('lag_1')
+ax.set_title('Lag Plot of Tunnel Traffic');
+ax = y.plot(**plot_params)
+ax = y_pred.plot(linewidth = 3)
 
