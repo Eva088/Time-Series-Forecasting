@@ -30,6 +30,7 @@ dtype = dtype)
 store_sales = store_sales.set_index('date').to_period('D')
 store_sales = store_sales.set_index(['store_nbr', 'family'], append = True)
 average_sales = store_sales. groupby('date').mean()['sales']
+average_sales.to_csv('data.csv', index=True)
 
 ## Determining trend with a moving average plot
 
@@ -42,9 +43,12 @@ trend = average_sales.rolling(
 
 #Identifying the trend
 
-# ax = average_sales.plot(**plot_params)
-# ax = trend.plot(ax = ax, linewidth = 3)
-# ax.set(title = 'Trend in Average Store Sales')
+ax = average_sales.plot(**plot_params)
+ax = trend.plot(ax = ax, linewidth = 3)
+ax.set(title = 'Trend in Average Store Sales')
+
+#%%
+plt.show()
 
 ## Creating a trend feature using Deterministic Process
 
@@ -75,8 +79,7 @@ ax = y_pred.plot(ax=ax, linewidth=3, label="Trend", color='C0')
 ax = y_fore.plot(ax=ax, linewidth=3, label="Trend Forecast", color='C3')
 ax.legend();
 
-#%%
-plt.show()
+
 
 
 
