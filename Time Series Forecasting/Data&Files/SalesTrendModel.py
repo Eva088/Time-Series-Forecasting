@@ -54,7 +54,7 @@ y = average_sales.copy()  # the target
 
 dp = DeterministicProcess(
     index = average_sales.index, 
-    order = 11
+    order = 3
 )
 
 # Create the feature set for the dates given in y.index
