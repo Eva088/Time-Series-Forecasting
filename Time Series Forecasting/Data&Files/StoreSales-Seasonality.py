@@ -175,3 +175,25 @@ plt.show()
 
 ## The plots indicate that our model captures seasonality better compared to the original series. 
 
+# Reading the file
+
+data_dir = Path('/Users/eva/Desktop/Kaggle/store-sales-time-series-forecasting')
+holidays = pd.read_csv(data_dir/'holidays_events.csv')
+holidays.columns = holidays.columns.str.strip()
+
+holidays['date'] = pd.to_datetime(holidays['date'])
+holidays['description'] = holidays['description'].astype('category')
+
+
+
+## National and regional holidays in the training set
+
+holidays = (holidays
+            .set_index('date')
+            .query("locale in ['National', 'Regional']")
+            .loc['2017' : '2017-08-15', ['description']]
+            .assign(description = lambda x: x.description.cat.remove_unused_categories())
+            )
+
+print(holidays.head(10))
+
