@@ -163,26 +163,24 @@ y_pred = pd.Series(model.predict(X), index = X.index, name = 'Fitted')
 
 y_deseasoned = y - y_pred
 
-fig, (ax1,ax2) = plt.subplots (2,1, sharex= True, sharey = True, figsize = (10,7))
-ax1 = plot_periodogram(y, ax = ax1)
-ax1.set_title ('Product Sales Frequency Components')
-ax2 = plot_periodogram(y_deseasoned, ax=ax2)
-ax2.set_title ('Deseasonalized')
+# fig, (ax1,ax2) = plt.subplots (2,1, sharex= True, sharey = True, figsize = (10,7))
+# ax1 = plot_periodogram(y, ax = ax1)
+# ax1.set_title ('Product Sales Frequency Components')
+# ax2 = plot_periodogram(y_deseasoned, ax=ax2)
+# ax2.set_title ('Deseasonalized')
 
-#%%
-
-plt.show()
 
 ## The plots indicate that our model captures seasonality better compared to the original series. 
 
 # Reading the file
 
 data_dir = Path('/Users/eva/Desktop/Kaggle/store-sales-time-series-forecasting')
-holidays = pd.read_csv(data_dir/'holidays_events.csv')
+holidays = pd.read_csv(data_dir/'holidays_events.csv', parse_dates = ['date'])
 holidays.columns = holidays.columns.str.strip()
-
-holidays['date'] = pd.to_datetime(holidays['date'])
 holidays['description'] = holidays['description'].astype('category')
+holidays['date'] = pd.to_datetime(holidays['date']).dt.to_period('D')
+
+
 
 
 
@@ -197,3 +195,29 @@ holidays = (holidays
 
 print(holidays.head(10))
 
+print(y.index)
+print(y_deseasoned.index)
+print(holidays.index)
+
+#Check if all holidays dates exist in y_deseasoned index
+
+missing_dates = holidays.index[~holidays.index.isin(y_deseasoned.index)]
+
+if len(missing_dates) > 0:
+    print("Missing dates in y_deseasoned:", missing_dates)
+else:
+    print("All dates in holidays are found in y_deseasoned")
+
+# If missing dates exist, reindex y_deseasoned to match holidays
+y_deseasoned_aligned = y_deseasoned.reindex(holidays.index)
+
+#The code is essentially plotting deseasonalized sales values over time, where the x-axis represents the dates (from holidays.index) and the y-axis represents the corresponding sales values from y_deseason.
+
+ax = y_deseasoned.plot(**plot_params)
+plt.plot_date(holidays.index, y_deseasoned[holidays.index], color='C3')
+ax.set_title('National and Regional Holidays');
+
+
+#%%
+
+plt.show()
