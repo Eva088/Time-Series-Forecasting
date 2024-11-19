@@ -199,25 +199,30 @@ print(y.index)
 print(y_deseasoned.index)
 print(holidays.index)
 
-#Check if all holidays dates exist in y_deseasoned index
 
-missing_dates = holidays.index[~holidays.index.isin(y_deseasoned.index)]
-
-if len(missing_dates) > 0:
-    print("Missing dates in y_deseasoned:", missing_dates)
-else:
-    print("All dates in holidays are found in y_deseasoned")
-
-# If missing dates exist, reindex y_deseasoned to match holidays
-y_deseasoned_aligned = y_deseasoned.reindex(holidays.index)
 
 #The code is essentially plotting deseasonalized sales values over time, where the x-axis represents the dates (from holidays.index) and the y-axis represents the corresponding sales values from y_deseason.
 
-ax = y_deseasoned.plot(**plot_params)
-plt.plot_date(holidays.index, y_deseasoned[holidays.index], color='C3')
-ax.set_title('National and Regional Holidays');
+# ax = y_deseasoned.plot(**plot_params)
+# plt.plot_date(holidays.index, y_deseasoned[holidays.index], color='C3')
+# ax.set_title('National and Regional Holidays');
 
+# Creating holiday features
+
+X_holidays = pd.get_dummies(holidays)
+
+X2 = X.join(X_holidays, on = 'date').fillna(0.0)
+print(X2.columns)
+
+#Fitting the seasonal model with holiday features added
+
+model = LinearRegression().fit(X2,y)
+y_pred = pd.Series(model.predict(X2), index = X2.index, name = 'Fitted')
+
+ax = y.plot(**plot_params, alpha=0.5, title = 'Average Sales', ylabel = 'items sold')
+ax = y_pred.plot(ax=ax, label = 'Seasonal')
+ax.legend()
 
 #%%
-
 plt.show()
+
