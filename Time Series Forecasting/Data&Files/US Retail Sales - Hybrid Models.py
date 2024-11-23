@@ -13,7 +13,7 @@ simplefilter('ignore')
 
 #Setting Matplotlib defaults
 
-plt.style.use("seaborn-whitegrid")
+plt.style.use("seaborn-v0_8-whitegrid")
 plt.rc(
     "figure",
     autolayout=True,
@@ -36,4 +36,12 @@ plot_params = dict(
     markerfacecolor="0.25",
 )
 
+data_dir = Path('/Users/eva/Desktop/Kaggle/KaggleTimeSeriesCourse')
+industries = ['BuildingMaterials', 'FoodAndBeverage'] 
+retail = pd.read_csv( data_dir/'us-retail-sales.csv',
+usecols = ['Month'] + industries,
+parse_dates = ['Month'],
+index_col = ['Month'],
+).to_period('D').reindex(columns = industries)
 
+print(retail.head())
