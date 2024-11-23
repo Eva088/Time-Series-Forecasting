@@ -44,4 +44,6 @@ parse_dates = ['Month'],
 index_col = ['Month'],
 ).to_period('D').reindex(columns = industries)
 
+
+retail = pd.concat({'Sales': retail}, names=['None', 'Industries'], axis=1) #Assigns the label 'Sales' to the entire retail dataframe and names the inner level 'industries'
 print(retail.head())
