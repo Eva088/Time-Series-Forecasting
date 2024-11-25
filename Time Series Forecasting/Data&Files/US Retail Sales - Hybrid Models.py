@@ -46,4 +46,17 @@ index_col = ['Month'],
 
 
 retail = pd.concat({'Sales': retail}, names=['None', 'Industries'], axis=1) #Assigns the label 'Sales' to the entire retail dataframe and names the inner level 'industries'
-print(retail.head())
+
+#Using a linear regression model to learn the trend in each series
+
+y = retail.copy()
+
+##Creating trend features
+
+dp = DeterministicProcess(
+    index = y.index,
+    order = 2,
+    constant = True,
+    drop = True)
+
+X = dp.in_sample()
