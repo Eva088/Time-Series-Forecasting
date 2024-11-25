@@ -28,4 +28,12 @@ family_sales = (
     .loc['2017']
 )
 
-print(family_sales.head())
+
+#Creating a boosted hybrid by implementing the class BoostedHybrid
+
+class BoostedHybrid(self, model_1, model_2):
+    self.model1 = model_1
+    self.model2 = model_2
+    self.y_columns = None
+    
+    
