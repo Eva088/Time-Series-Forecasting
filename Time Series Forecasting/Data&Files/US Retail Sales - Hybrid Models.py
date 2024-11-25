@@ -60,3 +60,33 @@ dp = DeterministicProcess(
     drop = True)
 
 X = dp.in_sample()
+
+#Testing on the years 2016-2019.Splitting the date index instead of the dataframe directly. 
+
+idx_train, idx_test = train_test_split(
+    y.index, test_size = 12 * 4, shuffle = False
+)
+
+X_train, X_test = X.loc[idx_train, :], X.loc[idx_test, :]
+
+y_train, y_test = y.loc[idx_train, :], y.loc[idx_test, :]
+
+#Fitting the trend model
+
+model = LinearRegression(fit_intercept = False)
+model.fit(X_train,y_train)
+
+#Making the prediction
+
+y_fit = pd.DataFrame(model.predict(X_train), index = y_train.index, columns = y_train.columns)
+
+print(y_fit.head())
+y_pred = pd.DataFrame(model.predict(X_test), index = y_test.index, columns = y_test.columns)
+
+axs = y_train.plot(color = '0.25', subplots = True, sharex = True)
+axs = y_test.plot(color = '0.25', subplots = True, sharex = True, ax = axs)
+axs = y_fit.plot(color = 'C0', subplots = True, sharex = True, ax = axs)
+axs = y_pred.plot(color = 'C3', subplots = True, sharex = True, ax = axs)
+
+for ax in axs: ax.legend([])
+ _ = plt.suptitle("Trends")
