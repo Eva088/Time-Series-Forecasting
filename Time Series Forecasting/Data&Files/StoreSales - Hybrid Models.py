@@ -31,9 +31,35 @@ family_sales = (
 
 #Creating a boosted hybrid by implementing the class BoostedHybrid
 
-class BoostedHybrid(self, model_1, model_2):
-    self.model1 = model_1
-    self.model2 = model_2
-    self.y_columns = None
+class BoostedHybrid():
+    def __init__(self,model_1, model_2):
+        self.model1 = model_1
+        self.model2 = model_2
+        self.y_columns = None
+
+#Defining the fit method for boosted hybrid
+
+    def fit(self, X_1, X_2, y):
+   #fit self.model_1
+        self.model1.fit(X_1,y)
+        y_fit = pd.DataFrame(
+        self.model1.predict(X_1), index = X_1.index, columns = y.columns
+        
+        )
+
+        #compute residuals
+        y_resid = y - y_fit
+        y_resid = y_resid.stack().squeeze() # wide to long
+
+        #fit self.model_2 on residuals
+        self.model_2.fit(X_2,y_resid)
     
-    
+     
+
+        # Save column names for predict method
+        self.y_columns = y.columns
+        # Save data for question checking
+        self.y_fit = y_fit
+        self.y_resid = y_resid
+
+
