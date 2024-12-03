@@ -1,4 +1,4 @@
-Kaggle Projects
+#Time-Series-Forecasting
 
-This repository contains my work and learnings on various data science challenges, including data cleaning, feature engineering, and machine learning.
+This repository contains my work and learnings on various data science challenges related to time series forecasting.
 
